@@ -41,12 +41,12 @@ func (this *Client) GetUrl (endpoint string, params map[string]string) string {
 	return "http://" + this.Hostname + "/" + endpoint + "?" + query
 }
 
-func (this *Client) Get(endpoint string, params map[string]string) ([]byte, error) {
-	u := this.GetUrl(endpoint, params)
-
-	response, err := http.Get(u)
-	if(err != nil) {
-		return nil, errors.New("Could make GET request to " + u)
+func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([]byte, error) {
+	var params map[string]string
+	if(len(optionalParams) > 0) {
+		params = optionalParams[0]
+	} else {
+		params = map[string]string {}
 	}
 
 	url := this.GetUrl(endpoint, params)
