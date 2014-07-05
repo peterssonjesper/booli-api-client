@@ -51,8 +51,8 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	return body, nil
 }
 
-func (this *Client) Listing(booliId string) (*Listing, error) {
-	response, err := this.Get("listings/" + booliId)
+func (this *Client) Listing(booliId int) (*Listing, error) {
+	response, err := this.Get("listings/" + fmt.Sprintf("%d", booliId))
 
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func (this *Client) Listing(booliId string) (*Listing, error) {
 	}
 
 	if len(envelope.Listings) == 0 {
-		return nil, errors.New("Listing not found.")
+		return nil, errors.New("Listing not found")
 	}
 
 	return &envelope.Listings[0], nil
