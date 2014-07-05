@@ -51,21 +51,25 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	return body, nil
 }
 
-func (this *Client) Listing(booliId string) (Listing, error) {
+func (this *Client) Listing(booliId string) (*Listing, error) {
 	response, err := this.Get("listings/" + booliId)
 
 	if err != nil {
-		return Listing{}, err
+		return nil, err
 	}
 
-	var data ListingsEnvelope
-	err = json.Unmarshal(response, &data)
+	var envelope ListingsEnvelope
+	err = json.Unmarshal(response, &envelope)
 
 	if err != nil {
-		return Listing{}, err
+		return nil, err
 	}
 
-	return data.Listings[0], nil
+	if len(envelope.Listings) == 0 {
+		return nil, errors.New("Listing not found.")
+	}
+
+	return &envelope.Listings[0], nil
 }
 
 func (this *Client) hash (time, unique string) string {
