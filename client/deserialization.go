@@ -4,7 +4,7 @@ type Listing struct {
 	BooliId          int
 	ConstructionYear int
 	ListPrice        int
-	LivingArea       int
+	LivingArea       float32
 	Location         Location
 	ObjectType       string
 	Pageviews        int
