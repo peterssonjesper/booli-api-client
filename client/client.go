@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 	"io"
+	"encoding/json"
 	"crypto/sha1"
 	"io/ioutil"
 	"math/rand"
@@ -22,6 +23,49 @@ func New(hostname, callerId, apiKey string) *Client {
 		callerId: callerId,
 		apiKey: apiKey,
 	}
+}
+
+func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([]byte, error) {
+	var params map[string]string
+	if len(optionalParams) > 0 {
+		params = optionalParams[0]
+	} else {
+		params = map[string]string {}
+	}
+
+	url := this.url(endpoint, params)
+
+	client := http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Accept", "application/vnd.booli-v2+json")
+
+	response, err := client.Do(req)
+
+	if err != nil {
+		return nil, errors.New("Could make GET request to " + url)
+	}
+
+	defer response.Body.Close()
+	body, _ := ioutil.ReadAll(response.Body)
+
+	return body, nil
+}
+
+func (this *Client) Listing(booliId string) (Listing, error) {
+	response, err := this.Get("listings/" + booliId)
+
+	if err != nil {
+		return Listing{}, err
+	}
+
+	var data ListingsEnvelope
+	err = json.Unmarshal(response, &data)
+
+	if err != nil {
+		return Listing{}, err
+	}
+
+	return data.Listings[0], nil
 }
 
 func (this *Client) hash (time, unique string) string {
@@ -56,30 +100,4 @@ func (this *Client) time() string {
 func (this *Client) unique() string {
 	random := rand.New(rand.NewSource(time.Now().UnixNano())).Uint32()
 	return fmt.Sprintf("%d", random)
-}
-
-func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([]byte, error) {
-	var params map[string]string
-	if len(optionalParams) > 0 {
-		params = optionalParams[0]
-	} else {
-		params = map[string]string {}
-	}
-
-	url := this.url(endpoint, params)
-
-	client := http.Client{}
-	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Accept", "application/vnd.booli-v2+json")
-
-	response, err := client.Do(req)
-
-	if err != nil {
-		return nil, errors.New("Could make GET request to " + url)
-	}
-
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
-
-	return body, nil
 }
