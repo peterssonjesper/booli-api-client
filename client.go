@@ -49,12 +49,20 @@ func (this *Client) Get(endpoint string, params map[string]string) ([]byte, erro
 		return nil, errors.New("Could make GET request to " + u)
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	url := this.GetUrl(endpoint, params)
+
+	client := http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Accept", "application/vnd.booli-v2+json")
+
+	response, err := client.Do(req)
 
 	if(err != nil) {
-		return nil, errors.New("Could parse body from " + u)
+		return nil, errors.New("Could make GET request to " + url)
 	}
+
+	defer response.Body.Close()
+	body, _ := ioutil.ReadAll(response.Body)
 
 	return body, nil
 }
