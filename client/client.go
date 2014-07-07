@@ -59,8 +59,15 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	return body, nil
 }
 
-func (this *Client) Listing(booliId int) (*Listing, error) {
-	response, err := this.Get("listings/" + fmt.Sprintf("%d", booliId))
+func (this *Client) Listing(booliId int, optionalParams ...map[string]string) (*Listing, error) {
+	var params map[string]string
+	if len(optionalParams) > 0 {
+		params = optionalParams[0]
+	} else {
+		params = map[string]string {}
+	}
+
+	response, err := this.Get("listings/" + fmt.Sprintf("%d", booliId), params)
 
 	if err != nil {
 		return nil, err
