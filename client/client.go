@@ -14,12 +14,12 @@ import (
 )
 
 type Client struct {
-	hostname, callerId, apiKey string
+	host, callerId, apiKey string
 }
 
-func New(hostname, callerId, apiKey string) *Client {
+func New(host, callerId, apiKey string) *Client {
 	return &Client{
-		hostname: hostname,
+		host: host,
 		callerId: callerId,
 		apiKey: apiKey,
 	}
@@ -45,8 +45,16 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 		return nil, errors.New("Could make GET request to " + url)
 	}
 
-	defer response.Body.Close()
+	if response.StatusCode == http.StatusNotFound {
+		return nil, errors.New("Could not find listing")
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return nil, errors.New("Could not get a proper response from server")
+	}
+
 	body, _ := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
 
 	return body, nil
 }
@@ -94,7 +102,7 @@ func (this *Client) url (endpoint string, params map[string]string) string {
 
 	query := p.Encode()
 
-	return "http://" + this.hostname + "/" + endpoint + "?" + query
+	return this.host + "/" + endpoint + "?" + query
 }
 
 func (this *Client) time() string {
