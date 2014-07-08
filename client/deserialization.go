@@ -8,15 +8,15 @@ type Listing struct {
 	HasImages        int
 	HasShowings      int
 	ListPrice        int
-	LivingArea       float32
+	LivingArea       float64
 	Location         Location
-	MonthlyPayment   float32
+	MonthlyPayment   float64
 	ObjectType       string
 	OperatingCost    int
 	Pageviews        int
 	Published        string
 	Rent             int
-	Rooms            float32
+	Rooms            float64
 	SecondOpinion    int
 	ShortDesc        string
 	Source           Source
@@ -34,8 +34,8 @@ type Region struct {
 }
 
 type Position struct {
-	Latitude  float32
-	Longitude float32
+	Latitude  float64
+	Longitude float64
 }
 
 type Location struct {
