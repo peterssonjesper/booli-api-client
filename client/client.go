@@ -12,11 +12,17 @@ import (
 	"net/http"
 )
 
+type ClientInterface interface {
+	Get(endpoint string, params ...map[string]string) ([]byte, error)
+	Listing(id int, params ...map[string]string) (*Listing, error)
+	SimilarListings(id int, params ...map[string]string) ([]Listing, error)
+}
+
 type Client struct {
 	host, callerId, apiKey string
 }
 
-func New(host, callerId, apiKey string) *Client {
+func New(host, callerId, apiKey string) ClientInterface {
 	return &Client{
 		host: host,
 		callerId: callerId,
