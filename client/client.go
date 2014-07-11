@@ -14,8 +14,8 @@ import (
 
 type ClientInterface interface {
 	Get(endpoint string, params ...map[string]string) ([]byte, error)
-	Listing(id int, params ...map[string]string) (*Listing, error)
-	SimilarListings(id int, params ...map[string]string) ([]Listing, error)
+	Listing(id int) ([]byte, error)
+	SimilarListings(id int, params ...map[string]string) ([]byte, error)
 }
 
 type Client struct {

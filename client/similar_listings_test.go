@@ -18,39 +18,26 @@ func TestReturnsSimilarListingWhenResponseIsValidJson(t *testing.T) {
 		}`)
 	}))
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	listings, err := client.SimilarListings(1234)
-
-	if len(listings) != 1 {
-		t.Error("Expected one listing, got %#v", len(listings))
+	type envelope struct {
+		Listings []map[string]int
 	}
 
-	if listings[0].BooliId != 1234 {
-		t.Error("Expected booli ID to be 1234, was %#v", listings[0].BooliId)
+	client := New(testServer.URL, "my-caller-id", "my-api-key")
+	body, err := client.SimilarListings(1234)
+
+	var e envelope
+	json.Unmarshal(body, &e)
+
+	if len(e.Listings) != 1 {
+		t.Error("Expected one listing, got %#v", len(e.Listings))
+	}
+
+	if e.Listings[0]["booliId"] != 1234 {
+		t.Error("Expected booli ID to be 1234, was %#v", e.Listings[0]["booliId"])
 	}
 
 	if err != nil {
 		t.Error("Expected error to be nil, was %#v", err)
-	}
-
-}
-
-func TestReturnsErrorWhenResponseForSimilarListingsIsInvalidJson(t *testing.T) {
-
-	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "MISSING_SEARCH_PARAMETERS")
-	}))
-
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	listings, err := client.SimilarListings(1234)
-
-	if listings != nil {
-		t.Error("Expected listings to be nil, was %#v", listings)
-	}
-
-	_, wasSyntaxError := err.(*json.SyntaxError)
-	if !wasSyntaxError {
-		t.Error("Expected a syntax error to have been set")
 	}
 
 }
@@ -63,11 +50,7 @@ func TestReturnsErrorWhenServerIsNotRespondingForSimilarListings(t *testing.T) {
 	}))
 
 	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	listings, err := client.SimilarListings(1234)
-
-	if listings != nil {
-		t.Error("Expected listings to be nil, was %#v", listings)
-	}
+	_, err := client.SimilarListings(1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")
