@@ -49,7 +49,7 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	}
 
 	if response.StatusCode == http.StatusNotFound {
-		return nil, errors.New("Could not find listing")
+		return nil, errors.New("Object not found, received 404.")
 	}
 
 	if response.StatusCode != http.StatusOK {
