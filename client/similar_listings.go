@@ -10,5 +10,5 @@ func (this *Client) SimilarListings(booliId int, optionalParams ...map[string]st
 		params = optionalParams[0]
 	}
 
-	return this.Get("listings/" + fmt.Sprintf("%d", booliId) + "/similar", params)
+	return this.Get(fmt.Sprintf("listings/%d/similar", booliId), params)
 }
