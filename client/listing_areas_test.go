@@ -8,6 +8,11 @@ import (
 	"encoding/json"
 )
 
+func getListingAreas(testServer *httptest.Server, id int) ([]byte, error) {
+	client := New(testServer.URL, "my-caller-id", "my-api-key")
+	return client.ListingAreas(id)
+}
+
 func TestReturnsListingAreasWhenResponseIsValidJson(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,8 +27,7 @@ func TestReturnsListingAreasWhenResponseIsValidJson(t *testing.T) {
 		Areas []map[string]int
 	}
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	body, err := client.ListingAreas(1234)
+	body, err := getListingAreas(testServer, 1234)
 
 	var e envelope
 	json.Unmarshal(body, &e)
@@ -49,8 +53,7 @@ func TestReturnsErrorWhenServerIsNotRespondingWithListingAreas(t *testing.T) {
 		fmt.Fprintln(w, `{"error": "Internal server error"}`)
 	}))
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	_, err := client.ListingAreas(1234)
+	_, err := getListingAreas(testServer, 1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")
@@ -59,17 +62,14 @@ func TestReturnsErrorWhenServerIsNotRespondingWithListingAreas(t *testing.T) {
 }
 
 func TestCallsCorrectUrlWhenFetchingListingAreas(t *testing.T) {
-
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, r.URL)
 	}))
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	url, _ := client.ListingAreas(1234)
+	url, _ := getListingAreas(testServer, 1234)
 
 	expected := "/listings/1234/areas"
 	if string(url)[:len(expected)] != expected {
 		t.Errorf("Expected url to start with %s, was %s", expected, url)
 	}
-
 }

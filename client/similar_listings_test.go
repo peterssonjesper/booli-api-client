@@ -8,6 +8,11 @@ import (
 	"encoding/json"
 )
 
+func getSimilarListings(testServer *httptest.Server, id int) ([]byte, error) {
+	client := New(testServer.URL, "my-caller-id", "my-api-key")
+	return client.SimilarListings(id)
+}
+
 func TestReturnsSimilarListingWhenResponseIsValidJson(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,8 +27,7 @@ func TestReturnsSimilarListingWhenResponseIsValidJson(t *testing.T) {
 		Listings []map[string]int
 	}
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	body, err := client.SimilarListings(1234)
+	body, err := getSimilarListings(testServer, 1234)
 
 	var e envelope
 	json.Unmarshal(body, &e)
@@ -49,11 +53,23 @@ func TestReturnsErrorWhenServerIsNotRespondingForSimilarListings(t *testing.T) {
 		fmt.Fprintln(w, `{"error": "Internal server error"}`)
 	}))
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	_, err := client.SimilarListings(1234)
+	_, err := getSimilarListings(testServer, 1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")
 	}
 
+}
+
+func TestCallsCorrectUrlWhenFetchingSimiliarListings(t *testing.T) {
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, r.URL)
+	}))
+
+	url, _ := getSimilarListings(testServer, 1234)
+
+	expected := "/listings/1234/similar"
+	if string(url)[:len(expected)] != expected {
+		t.Errorf("Expected url to start with %s, was %s", expected, url)
+	}
 }

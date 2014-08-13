@@ -8,6 +8,11 @@ import (
 	"encoding/json"
 )
 
+func getPreviousSales(testServer *httptest.Server, id int) ([]byte, error) {
+	client := New(testServer.URL, "my-caller-id", "my-api-key")
+	return client.PreviousSales(id)
+}
+
 func TestReturnsPreviousSalesWhenResponseIsValidJson(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,8 +27,7 @@ func TestReturnsPreviousSalesWhenResponseIsValidJson(t *testing.T) {
 		Sold []map[string]int
 	}
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	body, err := client.PreviousSales(1234)
+	body, err := getPreviousSales(testServer, 1234)
 
 	var e envelope
 	json.Unmarshal(body, &e)
@@ -49,8 +53,7 @@ func TestReturnsErrorWhenServerIsNotRespondingWithPreviousSales(t *testing.T) {
 		fmt.Fprintln(w, `{"error": "Internal server error"}`)
 	}))
 
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	_, err := client.PreviousSales(1234)
+	_, err := getPreviousSales(testServer, 1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")
