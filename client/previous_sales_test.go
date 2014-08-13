@@ -50,7 +50,7 @@ func TestReturnsErrorWhenServerIsNotRespondingWithPreviousSales(t *testing.T) {
 	}))
 
 	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	_, err := client.SimilarListings(1234)
+	_, err := client.PreviousSales(1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")

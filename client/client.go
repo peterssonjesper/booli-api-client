@@ -17,6 +17,7 @@ type ClientInterface interface {
 	Listing(id int) ([]byte, error)
 	SimilarListings(id int, params ...map[string]string) ([]byte, error)
 	ListingImages(id int, params ...map[string]string) ([]byte, error)
+	ListingAreas(id int, params ...map[string]string) ([]byte, error)
 	PreviousSales(id int, params ...map[string]string) ([]byte, error)
 }
 
