@@ -15,6 +15,7 @@ import (
 type ClientInterface interface {
 	Get(endpoint string, params ...map[string]string) ([]byte, error)
 	Listing(id int) ([]byte, error)
+	Sale(id int) ([]byte, error)
 	SimilarListings(id int, params ...map[string]string) ([]byte, error)
 	ListingImages(id int, params ...map[string]string) ([]byte, error)
 	ListingAreas(id int, params ...map[string]string) ([]byte, error)
@@ -52,7 +53,7 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	}
 
 	if response.StatusCode == http.StatusNotFound {
-		return nil, errors.New("Object not found, received 404.")
+		return nil, nil
 	}
 
 	if response.StatusCode != http.StatusOK {
