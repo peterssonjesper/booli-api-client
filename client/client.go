@@ -15,6 +15,7 @@ import (
 type ClientInterface interface {
 	Get(endpoint string, params ...map[string]string) ([]byte, error)
 	Listing(id int, params ...map[string]string) ([]byte, error)
+	Listings(params map[string]string) ([]byte, error)
 	SoldProperty(id int, params ...map[string]string) ([]byte, error)
 	SimilarListings(id int, params ...map[string]string) ([]byte, error)
 	ListingImages(id int, params ...map[string]string) ([]byte, error)
