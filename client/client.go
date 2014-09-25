@@ -54,6 +54,9 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 		return nil, errors.New("Could make GET request to " + url)
 	}
 
+	body, _ := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+
 	if response.StatusCode == http.StatusNotFound {
 		return nil, nil
 	}
@@ -61,9 +64,6 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	if response.StatusCode != http.StatusOK {
 		return nil, errors.New("Could not get a proper response from server")
 	}
-
-	body, _ := ioutil.ReadAll(response.Body)
-	defer response.Body.Close()
 
 	return body, nil
 }
