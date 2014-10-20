@@ -51,7 +51,7 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	response, err := client.Do(req)
 
 	if err != nil {
-		return nil, errors.New("Could make GET request to " + url)
+		return nil, errors.New("Could not make GET request to " + url)
 	}
 
 	body, _ := ioutil.ReadAll(response.Body)
@@ -62,7 +62,11 @@ func (this *Client) Get(endpoint string, optionalParams ...map[string]string) ([
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return nil, errors.New("Could not get a proper response from server")
+		return nil, errors.New(fmt.Sprintf("Could not get a proper response " + 
+			"from server. Got response code %d but expected %d from URL %s",
+			response.StatusCode,
+			http.StatusOK,
+			url))
 	}
 
 	return body, nil
