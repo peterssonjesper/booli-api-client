@@ -4,11 +4,12 @@ import (
 	"fmt"
 )
 
-func (this *Client) SimilarListings(booliId int, optionalParams ...map[string]string) ([]byte, error) {
+// SimilarListings fetches listings similar to a listing given its Booli ID
+func (c *Client) SimilarListings(booliID int, optionalParams ...map[string]string) ([]byte, error) {
 	params := map[string]string{}
 	if len(optionalParams) > 0 {
 		params = optionalParams[0]
 	}
 
-	return this.Get(fmt.Sprintf("listings/%d/similar", booliId), params)
+	return c.Get(fmt.Sprintf("listings/%d/similar", booliID), params)
 }

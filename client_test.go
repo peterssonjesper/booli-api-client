@@ -2,10 +2,10 @@ package client
 
 import (
 	"fmt"
-	"testing"
-	"net/url"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"testing"
 )
 
 func TestAddsNeededParameters(t *testing.T) {
@@ -15,7 +15,7 @@ func TestAddsNeededParameters(t *testing.T) {
 		fmt.Fprintln(w, u)
 	}))
 
-	parameters := map[string]string {
+	parameters := map[string]string{
 		"limit": "10",
 	}
 

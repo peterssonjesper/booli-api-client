@@ -8,36 +8,27 @@ import (
 	"testing"
 )
 
-func getListingImages(testServer *httptest.Server, id int) ([]byte, error) {
-	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	return client.ListingImages(id)
-}
-
-func TestReturnsListingImagesWhenResponseIsValidJson(t *testing.T) {
+func TestReturnsSoldPropertyWhenResponseIsValidJson(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, `{
-			"images": [
-				{ "id" : 10, "width": 20, "height": 30 }
+			"sold": [
+				{ "booliId" : 1234 }
 			]
 		}`)
 	}))
 
 	type envelope struct {
-		Images []map[string]int
+		Sold []map[string]int
 	}
 
-	body, err := getListingImages(testServer, 1234)
+	body, err := getSoldProperty(testServer, 1234)
 
 	var e envelope
 	json.Unmarshal(body, &e)
 
-	if len(e.Images) != 1 {
-		t.Error("Expected one image, got %#v", len(e.Images))
-	}
-
-	if e.Images[0]["id"] != 10 {
-		t.Error("Expected image ID to be 10, was %#v", e.Images[0]["booliId"])
+	if e.Sold[0]["booliId"] != 1234 {
+		t.Error("Expected booli ID to be 1234, was %#v", e.Sold[0]["booliId"])
 	}
 
 	if err != nil {
@@ -46,14 +37,14 @@ func TestReturnsListingImagesWhenResponseIsValidJson(t *testing.T) {
 
 }
 
-func TestReturnsErrorWhenServerIsNotRespondingForListingImages(t *testing.T) {
+func TestReturnsErrorWhenServerIsNotRespondingForSoldProperty(t *testing.T) {
 
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintln(w, `{"error": "Internal server error"}`)
 	}))
 
-	_, err := getListingImages(testServer, 1234)
+	_, err := getSoldProperty(testServer, 1234)
 
 	if err == nil {
 		t.Error("Expected an error to have been set")
@@ -61,15 +52,20 @@ func TestReturnsErrorWhenServerIsNotRespondingForListingImages(t *testing.T) {
 
 }
 
-func TestCallsCorrectUrlWhenFetchingListingImages(t *testing.T) {
+func TestCallsCorrectUrlWhenFetchingSoldProperty(t *testing.T) {
 	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, r.URL)
 	}))
 
-	url, _ := getListingImages(testServer, 1234)
+	url, _ := getSoldProperty(testServer, 1234)
 
-	expected := "/listings/1234/images"
+	expected := "/sold/1234"
 	if string(url)[:len(expected)] != expected {
 		t.Errorf("Expected url to start with %s, was %s", expected, url)
 	}
+}
+
+func getSoldProperty(testServer *httptest.Server, id int) ([]byte, error) {
+	client := New(testServer.URL, "my-caller-id", "my-api-key")
+	return client.SoldProperty(id)
 }

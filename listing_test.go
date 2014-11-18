@@ -1,11 +1,11 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
-	"testing"
 	"net/http"
 	"net/http/httptest"
-	"encoding/json"
+	"testing"
 )
 
 func getListing(testServer *httptest.Server, id int) ([]byte, error) {
@@ -62,7 +62,7 @@ func TestCallsCorrectUrlWhenFetchingListing(t *testing.T) {
 		fmt.Fprintln(w, r.URL)
 	}))
 
-	url, _ := getSimilarListings(testServer, 1234)
+	url, _ := getListing(testServer, 1234)
 
 	expected := "/listings/1234"
 	if string(url)[:len(expected)] != expected {

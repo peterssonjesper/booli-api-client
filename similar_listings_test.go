@@ -1,11 +1,11 @@
 package client
 
 import (
+	"encoding/json"
 	"fmt"
-	"testing"
 	"net/http"
 	"net/http/httptest"
-	"encoding/json"
+	"testing"
 )
 
 func getSimilarListings(testServer *httptest.Server, id int) ([]byte, error) {
