@@ -2,7 +2,6 @@ package client
 
 import (
 	"crypto/sha1"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -55,7 +54,7 @@ func (c *Client) Get(endpoint string, optionalParams ...map[string]string) ([]by
 	response, err := client.Do(req)
 
 	if err != nil {
-		return nil, errors.New("Could not make GET request to " + url)
+		return nil, fmt.Errorf("Could not make GET request to %s: %q", url, err.Error())
 	}
 
 	body, _ := ioutil.ReadAll(response.Body)
