@@ -37,7 +37,7 @@ func TestReturnsListingAreasWhenResponseIsValidJson(t *testing.T) {
 	}
 
 	if e.Areas[0]["id"] != 1234 {
-		t.Error("Expected booli ID to be 1234, was %#v", e.Areas[0]["booliId"])
+		t.Error("Expected booli ID to be 1234, was %#v", e.Areas[0]["id"])
 	}
 
 	if err != nil {
