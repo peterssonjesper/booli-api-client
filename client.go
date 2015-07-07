@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"crypto/sha1"
 	"fmt"
 	"io"
@@ -14,6 +15,7 @@ import (
 // Interface describes the Booli API Client
 type Interface interface {
 	Get(endpoint string, params ...map[string]string) ([]byte, error)
+	Post(endpoint string, payload []byte, params ...map[string]string) ([]byte, error)
 	Listing(id int, params ...map[string]string) ([]byte, error)
 	Listings(params map[string]string) ([]byte, error)
 	SoldProperty(id int, params ...map[string]string) ([]byte, error)
@@ -23,6 +25,7 @@ type Interface interface {
 	ListingAreas(id int, params ...map[string]string) ([]byte, error)
 	SoldPropertyAreas(id int, params ...map[string]string) ([]byte, error)
 	Residences(params ...map[string]string) ([]byte, error)
+	Estimate(params map[string]string) ([]byte, error)
 }
 
 // Client holds data needed to talk to the API
@@ -74,6 +77,39 @@ func (c *Client) Get(endpoint string, optionalParams ...map[string]string) ([]by
 	}
 
 	return body, nil
+}
+
+func (c *Client) Post(endpoint string, payload []byte, optionalParams ...map[string]string) ([]byte, error) {
+	params := map[string]string{}
+	if len(optionalParams) > 0 {
+		params = optionalParams[0]
+	}
+
+	url := c.url(endpoint, params)
+
+	client := &http.Client{}
+	buf := bytes.NewBuffer(payload)
+	req, err := http.NewRequest("POST", url, buf)
+	req.Header.Set("Accept", "application/vnd.booli-v2+json")
+
+	response, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("Could not make POST request to %s: %q", url, err.Error())
+	}
+
+	body, _ := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+
+	if response.StatusCode == http.StatusOK || response.StatusCode == http.StatusCreated {
+		return body, nil
+	}
+
+	return nil, fmt.Errorf("Could not get a proper response "+
+		"from server. Got response code %d but expected %d or %d from URL %s",
+		response.StatusCode,
+		http.StatusOK,
+		http.StatusCreated,
+		url)
 }
 
 func (c *Client) hash(time, unique string) string {
