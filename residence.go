@@ -1,5 +1,7 @@
 package client
 
+import "encoding/json"
+
 // Residences fetches a (filtered) list of residences from the API
 func (c *Client) Residences(optionalParams ...map[string]string) ([]byte, error) {
 	params := map[string]string{}
@@ -8,4 +10,15 @@ func (c *Client) Residences(optionalParams ...map[string]string) ([]byte, error)
 	}
 
 	return c.Get("residences", params)
+}
+
+// Estimate will POST to /estimate
+func (c *Client) Estimate(params map[string]string) ([]byte, error) {
+	json, err := json.Marshal(params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.Post("estimate", json)
 }
