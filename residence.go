@@ -12,13 +12,13 @@ func (c *Client) Residences(optionalParams ...map[string]string) ([]byte, error)
 	return c.Get("residences", params)
 }
 
-// Estimate will POST to /estimate
-func (c *Client) Estimate(params map[string]string) ([]byte, error) {
+// Estimate will POST to /estimation-subscription
+func (c *Client) SubscribeToEstimation(params map[string]string) ([]byte, error) {
 	json, err := json.Marshal(params)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return c.Post("estimate", json)
+	return c.Post("estimation-subscription", json)
 }

@@ -25,7 +25,7 @@ type Interface interface {
 	ListingAreas(id int, params ...map[string]string) ([]byte, error)
 	SoldPropertyAreas(id int, params ...map[string]string) ([]byte, error)
 	Residences(params ...map[string]string) ([]byte, error)
-	Estimate(params map[string]string) ([]byte, error)
+	SubscribeToEstimation(params map[string]string) ([]byte, error)
 }
 
 // Client holds data needed to talk to the API

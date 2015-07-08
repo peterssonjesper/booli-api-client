@@ -49,7 +49,7 @@ func TestJSONEncodesEstimatePayload(t *testing.T) {
 	}))
 
 	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	body, err := client.Estimate(map[string]string{
+	body, err := client.SubscribeToEstimation(map[string]string{
 		"hello": "world",
 	})
 
