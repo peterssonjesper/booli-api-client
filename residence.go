@@ -13,7 +13,7 @@ func (c *Client) Residences(optionalParams ...map[string]string) ([]byte, error)
 }
 
 // Estimate will POST to /estimation-subscription
-func (c *Client) SubscribeToEstimation(params map[string]string) ([]byte, error) {
+func (c *Client) SubscribeToEstimation(params map[string]interface{}) ([]byte, error) {
 	json, err := json.Marshal(params)
 
 	if err != nil {

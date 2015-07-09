@@ -49,15 +49,16 @@ func TestJSONEncodesEstimatePayload(t *testing.T) {
 	}))
 
 	client := New(testServer.URL, "my-caller-id", "my-api-key")
-	body, err := client.SubscribeToEstimation(map[string]string{
+	body, err := client.SubscribeToEstimation(map[string]interface{}{
 		"hello": "world",
+		"lat":   58.1,
 	})
 
 	if err != nil {
 		t.Error("Expected error to be nil, was %#v", err)
 	}
 
-	expected := `{"hello":"world"}`
+	expected := `{"hello":"world","lat":58.1}`
 	if string(body) != expected {
 		t.Errorf("Expected body to be encoded to %s, but was %s", expected, body)
 	}
