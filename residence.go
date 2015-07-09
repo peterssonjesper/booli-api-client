@@ -20,5 +20,5 @@ func (c *Client) SubscribeToEstimation(params map[string]string) ([]byte, error)
 		return nil, err
 	}
 
-	return c.Post("estimation-subscription", json)
+	return c.Post("estimation-subscriptions", json)
 }
