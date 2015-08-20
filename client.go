@@ -25,6 +25,7 @@ type Interface interface {
 	ListingAreas(id int, params ...map[string]string) ([]byte, error)
 	SoldPropertyAreas(id int, params ...map[string]string) ([]byte, error)
 	Residences(params ...map[string]string) ([]byte, error)
+	Address(id int, params ...map[string]string) ([]byte, error)
 	SubscribeToEstimation(params map[string]interface{}) ([]byte, error)
 }
 
