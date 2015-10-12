@@ -24,6 +24,7 @@ type Interface interface {
 	ListingImages(id int, params ...map[string]string) ([]byte, error)
 	ListingAreas(id int, params ...map[string]string) ([]byte, error)
 	SoldPropertyAreas(id int, params ...map[string]string) ([]byte, error)
+	Residence(id int, params ...map[string]string) ([]byte, error)
 	Residences(params ...map[string]string) ([]byte, error)
 	Address(id int, params ...map[string]string) ([]byte, error)
 	Project(id int, params ...map[string]string) ([]byte, error)
