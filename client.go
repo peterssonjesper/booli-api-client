@@ -56,7 +56,7 @@ func (c *Client) Get(endpoint string, optionalParams ...map[string]string) ([]by
 
 	client := http.Client{}
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Set("Accept", "application/vnd.booli-v2+json")
+	req.Header.Set("Accept", "application/vnd.booli-v3+json")
 
 	response, err := client.Do(req)
 
