@@ -23,3 +23,14 @@ func (c *Client) SoldPropertyAreas(id int, optionalParams ...map[string]string) 
 
 	return c.Get(fmt.Sprintf("sold/%d/areas", id), params)
 }
+
+// AddressAreas fetches all areas that an address was placed in
+func (c *Client) AddressAreas(addressID int, optionalParams ...map[string]string) ([]byte, error) {
+	params := map[string]string{}
+	if len(optionalParams) > 0 {
+		params = optionalParams[0]
+	}
+	params["addressId"] = fmt.Sprintf("%d", addressID)
+
+	return c.Get("areas", params)
+}
