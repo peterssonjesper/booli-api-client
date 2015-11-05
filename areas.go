@@ -9,6 +9,11 @@ func (c *Client) Area(areaID int) ([]byte, error) {
 	return c.Get(fmt.Sprintf("areas/%d", areaID))
 }
 
+// Areas fetches areas with given parameters
+func (c *Client) Areas(params map[string]string) ([]byte, error) {
+	return c.Get("areas", params)
+}
+
 // ListingAreas fetches all areas that a listing is placed in
 func (c *Client) ListingAreas(id int, optionalParams ...map[string]string) ([]byte, error) {
 	params := map[string]string{}
