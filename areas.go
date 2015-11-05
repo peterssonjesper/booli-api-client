@@ -4,6 +4,11 @@ import (
 	"fmt"
 )
 
+// Area fetches an area by given ID
+func (c *Client) Area(areaID int) ([]byte, error) {
+	return c.Get(fmt.Sprintf("areas/%d", areaID))
+}
+
 // ListingAreas fetches all areas that a listing is placed in
 func (c *Client) ListingAreas(id int, optionalParams ...map[string]string) ([]byte, error) {
 	params := map[string]string{}
