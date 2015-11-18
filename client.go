@@ -31,6 +31,7 @@ type Interface interface {
 	Residences(params ...map[string]string) ([]byte, error)
 	Address(id int, params ...map[string]string) ([]byte, error)
 	Project(id int, params ...map[string]string) ([]byte, error)
+	Projects(params ...map[string]string) ([]byte, error)
 	SubscribeToEstimation(params map[string]interface{}) ([]byte, error)
 }
 
